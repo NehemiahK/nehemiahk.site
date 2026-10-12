@@ -208,3 +208,6 @@ footer a { color: var(--muted); }
   .contact-form .row { grid-template-columns: 1fr; }
   .contact-form button { justify-self: stretch; }
 }
+
+.hero-actions { margin-top: 22px; }
+@media (max-width: 480px) { .hero-actions .btn { flex: 1 1 0; } }
