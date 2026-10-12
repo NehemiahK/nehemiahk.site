@@ -153,7 +153,11 @@
       })
         .then(function (r) { return r.json().then(function (d) { if (!r.ok || d.success === 'false') throw d; }); })
         .then(function () { form.reset(); status.textContent = "Thanks! Your message is on its way. I'll reply soon."; })
-        .catch(function () { status.textContent = 'That didn’t go through. Please use WhatsApp or email instead.'; })
+        .catch(function (err) {
+          console.error('Contact form error:', err);
+          status.textContent = 'That didn’t go through. Please use WhatsApp or email instead.' +
+            (err && err.message ? ' (' + err.message + ')' : '');
+        })
         .finally(function () { button.disabled = false; });
     });
 
