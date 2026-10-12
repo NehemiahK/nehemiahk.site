@@ -95,15 +95,27 @@
 
       <section id="contact">
         <h2><span class="accent">#</span> contact</h2>
-        <p>Have a role, a project, or just want to say hi? Message me on WhatsApp or send an email, and I'll get back to you.</p>
+        <p>Have a role, a project, or just want to say hi? Leave a message below or reach me on WhatsApp, and I'll get back to you.</p>
+        <form class="contact-form" action="https://formsubmit.co/nehemiahkiv@gmail.com" method="POST">
+          <input type="hidden" name="_subject" value="New message from your portfolio">
+          <input type="hidden" name="_template" value="table">
+          <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="row">
+            <label>Name<input name="name" required autocomplete="name"></label>
+            <label>Email<input name="email" type="email" required autocomplete="email"></label>
+          </div>
+          <label>Message<textarea name="message" rows="5" required></textarea></label>
+          <button class="btn primary" type="submit">Send message</button>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </form>
         <div class="actions">
-          <a class="btn primary" href="https://wa.me/972534227008?text=Hi%20Nehemiah%2C%20I%20saw%20your%20site%20and%20wanted%20to%20reach%20out." target="_blank" rel="noopener">
+          <a class="btn" href="https://wa.me/972534227008?text=Hi%20Nehemiah%2C%20I%20saw%20your%20site%20and%20wanted%20to%20reach%20out." target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.4.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>
             WhatsApp me
           </a>
           <a class="btn" href="mailto:nehemiahkiv@gmail.com?subject=Hi%20Nehemiah">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M3 5h18v14H3z M3 6l9 7 9-7"/></svg>
-            Send an email
+            Email directly
           </a>
         </div>
       </section>
@@ -121,6 +133,24 @@
   </div>
 
   <script>
+    var form = document.querySelector('.contact-form');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var status = form.querySelector('.form-status');
+      var button = form.querySelector('button');
+      button.disabled = true;
+      status.textContent = 'Sending…';
+      fetch(form.action.replace('formsubmit.co/', 'formsubmit.co/ajax/'), {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: new FormData(form)
+      })
+        .then(function (r) { return r.json().then(function (d) { if (!r.ok || d.success === 'false') throw d; }); })
+        .then(function () { form.reset(); status.textContent = "Thanks! Your message is on its way. I'll reply soon."; })
+        .catch(function () { status.textContent = 'That didn’t go through. Please use WhatsApp or email instead.'; })
+        .finally(function () { button.disabled = false; });
+    });
+
     document.querySelector('.theme').addEventListener('click', function () {
       var root = document.documentElement;
       var dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
